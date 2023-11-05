@@ -1,0 +1,572 @@
+import time
+import matplotlib.pyplot as plt
+
+print("Welcome to Formula 1 Strategy Maker")
+time.sleep(1)
+print("The information used here is related to the Mexico GP 2022")
+time.sleep(1)
+print("Wet weather is also not taken into consideration")
+time.sleep(1)
+
+laps = 0
+tyresUsed = []
+tyreLaps = []
+count = 0
+
+def wasNumEntered(inputRequest, x):
+  while True:
+    try:
+      value = int(input(inputRequest))
+    except ValueError:
+      print("A number(more than 0 and not a decimal) is expected, please enter a number")
+      continue
+    if value < 0 or (x == True and value == 0):
+      print("Negative number or 0 was entered, please enter a different number")
+      continue
+    else:
+      break
+  return value
+
+def chart():
+  global laps
+  global tyresUsed
+  global tyreLaps
+  soft = 0
+  medium = 0
+  hard = 0
+  tyreName = []
+  x = 0
+  for i in tyresUsed:
+    if i == "Softs":
+      x = soft
+      a = "Soft" + str((x + 1))
+      tyreName.append(a)
+      soft += 1
+    elif i == "Mediums":
+      x = medium
+      b = "Medium" + str((x + 1))
+      tyreName.append(b)
+      medium += 1
+    elif i == "Hards":
+      x = hard
+      c = "Hard" + str((x + 1))
+      tyreName.append(c)
+      hard += 1
+
+  plt.bar(tyreName, tyreLaps, color = [])
+  plt.title("Laps on each tyre used")
+  plt.xlabel("Tyre name")
+  plt.yticks(rotation=20)
+  plt.ylabel("Laps on tyres")
+  
+  plt.bar(tyreName, tyreLaps)
+  plt.savefig("graph.png")
+  plt.show()
+    
+def hasGoneThrough(x):
+  global tyresUsed
+  num = 0
+  for i in tyresUsed:
+    if i.lower() == x:
+      num += 1
+  if num >= 1:
+    return True
+  else:
+    return False
+
+def softs():
+  if hasGoneThrough("softs") == False:
+    print("Softs are usable for a maximum of 20 laps")
+    time.sleep(1)
+    print("Lap 5 to 10 are the best laps times produced by this tyre")
+    time.sleep(1)
+    print("Fastest tyre compared to the rest for the first 17 laps")
+  else:
+    print("Softs are usable for a maximum of 20 laps")
+
+  time.sleep(1)
+  stintLength = wasNumEntered("How many laps would you like to be on softs for ", True)
+  while stintLength > 20:
+    print("Stint length is too long, please reduce it")
+    stintLength = wasNumEntered("How long do you want this soft tyre stint to be ", True)
+  global laps
+  global tyreLaps
+  global tyresUsed
+  global count
+  laps += stintLength
+  if laps > totalLaps:
+    laps -= stintLength
+    finishRace = totalLaps - laps
+    laps += finishRace
+    tyreLaps.append(finishRace)
+    tyresUsed.append("Softs")
+    print("The stint length picked would go on after the race")
+    time.sleep(1)
+    print("Stint length has been reduced to", finishRace)
+    time.sleep(1)
+  else:
+    tyreLaps.append(stintLength)
+    tyresUsed.append("Softs")
+  if count > 0:
+    pitstop()
+  count += 1
+  raceEndReturn = raceEnd()
+  if raceEndReturn == True:
+    print("Race has finished")
+    time.sleep(1)
+    print("Thank you for using F1 Strategy Maker")
+    return True
+  elif raceEndReturn == "true":
+    print("Not the greatest of situations but if we extend this stint, we can finish the race")
+    time.sleep(1)
+    print("Would you like to take the risk?")
+    extend = input()
+    extend = extend.lower()
+    while extend != "yes" and extend != "no":
+      print("Please pick a valid option")
+      time.sleep(1)
+      print("Would you like to extend the stint, please say 'yes' or 'no'")
+      extend = input()
+      extend = extend.lower()
+    if extend == "yes":
+      print("Race has finished")
+      time.sleep(1)
+      print("Thank you for using F1 Strategy Maker")
+      laps -= stintLength
+      laps += (totalLaps - laps)
+      return True
+    else:
+      return False
+  else:
+    return False
+
+def mediums():
+  if hasGoneThrough("mediums") == False:
+    print("Mediums are not great to use after lap 32")
+    time.sleep(1)
+    print("Mediums give the best lap time between laps 7-18")
+    time.sleep(1)
+    print("Quickest tyre compared to other compounds from lap 24-30")
+  else:
+    print("Mediums are not great to use after lap 32")
+
+  time.sleep(1)
+  stintLength = wasNumEntered("How many laps would you like to be on the mediums for ", True)
+  while stintLength > 32:
+    print("Stint length is too long, please reduce it")
+    stintLength = wasNumEntered("How long do you want this mediums tyre stint to be ", True)
+  global laps
+  global tyreLaps
+  global tyresUsed
+  global count
+  laps += stintLength
+  if laps > totalLaps:
+    laps -= stintLength
+    finishRace = totalLaps - laps
+    laps += finishRace
+    tyreLaps.append(finishRace)
+    tyresUsed.append("Mediums")
+    print("The stint length picked would go on after the race")
+    time.sleep(1)
+    print("Stint length has been reduced to", finishRace)
+    time.sleep(1)
+  else:
+    tyreLaps.append(stintLength)
+    tyresUsed.append("Mediums")
+  if count > 0:
+    pitstop()
+  count += 1
+  raceEndReturn = raceEnd()
+  if raceEndReturn == True:
+    print("Race has finished")
+    time.sleep(1)
+    print("Thank you for using F1 Strategy Maker")
+    return True
+  elif raceEndReturn == "true":
+    print("Not the greatest of situations but if we extend this stint, we can finish the race")
+    time.sleep(1)
+    print("Would you like to take the risk?")
+    extend = input()
+    extend = extend.lower()
+    while extend != "yes" and extend != "no":
+      print("Please pick a valid option")
+      time.sleep(1)
+      print("Would you like to extend the stint, please say 'yes' or 'no'")
+      extend = input()
+      extend = extend.lower()
+    if extend == "yes":
+      print("Race has finished")
+      time.sleep(1)
+      print("Thank you for using F1 Strategy Maker")
+      laps -= stintLength
+      laps += (totalLaps - laps)
+      return True
+    else:
+      return False
+  else:
+    return False
+
+def hards():
+  if hasGoneThrough("hards") == False:
+    print("Hards can be used till lap 40")
+    time.sleep(1)
+    print("Hards give the best lap time between laps 12-20")
+    time.sleep(1)
+    print("They are the quickest tyre compared to other compounds from lap 30-40")
+  else:
+    print("Hards can be used till lap 40")
+    
+  time.sleep(1)
+  stintLength = wasNumEntered("How many laps would you like to be on the hards for ", True)
+  while stintLength > 40:
+    print("Stint length is too long, please reduce it")
+    stintLength = wasNumEntered("How long do you want this hards tyre stint to be ", True)
+  global laps
+  global tyreLaps
+  global tyresUsed
+  global count
+  laps += stintLength
+  if laps > totalLaps:
+    laps -= stintLength
+    finishRace = totalLaps - laps
+    laps += finishRace
+    tyreLaps.append(finishRace)
+    tyresUsed.append("Hards")
+    print("The stint length picked would go on after the race")
+    time.sleep(1)
+    print("Stint length has been reduced to", finishRace)
+    time.sleep(1)
+  else:
+    tyreLaps.append(stintLength)
+    tyresUsed.append("Hards")
+  if count > 0:
+    pitstop()
+  count += 1
+  raceEndReturn = raceEnd()
+  if raceEndReturn == True:
+    print("Race has finished")
+    time.sleep(1)
+    print("Thank you for using F1 Strategy Maker")
+    return True
+  elif raceEndReturn == "true":
+    print("Not the greatest of situations but if we extend this stint, we can finish the race")
+    time.sleep(1)
+    print("Would you like to take the risk?")
+    extend = input()
+    extend = extend.lower()
+    while extend != "yes" and extend != "no":
+      print("Please pick a valid option")
+      time.sleep(1)
+      print("Would you like to extend the stint, please say 'yes' or 'no'")
+      extend = input()
+      extend = extend.lower()
+    if extend == "yes":
+      print("Race has finished")
+      time.sleep(1)
+      print("Thank you for using F1 Strategy Maker")
+      laps -= stintLength
+      laps += (totalLaps - laps)
+      return True
+    else:
+      return False
+  else:
+    return False
+
+def pitstop():
+  print("This is only information that has been provided to the programme")
+  time.sleep(1)
+  global laps
+  print("Currently finshing lap", laps)
+  time.sleep(1)
+  global tyresUsed
+  print("You have used", tyresUsed[0], end = "")
+  for i in tyresUsed[1:]:
+    print(",", i, end = "")
+  time.sleep(1)
+  print("\nTotal pitstops made are", len(tyresUsed) - 1)
+
+def raceEnd():
+  global laps
+  if laps >= totalLaps:
+    return True
+  elif closeToEnd() == True:
+    return "true"
+  else:
+    return False  
+    
+def closeToEnd():
+  if (laps + 10) >= totalLaps:
+    return True
+  else:
+    return False
+
+start = input("Has the race started yet? ")
+start = start.lower()
+while start != "yes" and start != "no":
+  print("Please enter whether the race has started or not with a 'yes' or 'no'")
+  start = input()
+  start = start.lower()
+
+totalLaps = wasNumEntered("How many laps are in the race in total?(In context, the 2022 Mexico GP was 71 laps long)", True)
+
+if start == "no":
+  print("What tyres would you like to start with(please enter softs, mediums or hards)? ")
+  styre = input()
+  sTyre = styre.lower()
+  while sTyre != "softs" and sTyre != "mediums" and sTyre != "hards":
+    print("Option not available, please only pick an option provided")
+    time.sleep(1)
+    print("What tyres would you like to start with(please enter softs, mediums or hards)? ")
+    styre = input()
+    sTyre = styre.lower()
+  if sTyre == "hards":
+    print("This is not a recommended tyre to start on")
+    time.sleep(1)
+    print("If you still want to go on hards please type 'yes'")
+    time.sleep(1)
+    print("If not please type 'no'")
+    option = input()
+    option = option.lower()
+    if option == "yes":
+      if hards() == True:
+        chart()
+    elif option == "no":
+      print("What tyres would you like to start with(please enter softs, mediums or hards)")
+      styre = input()
+      sTyre = styre.lower()
+      while sTyre != "softs" and sTyre != "mediums" and sTyre != "hards":
+        print("Option not available, please only pick an option provided")
+        time.sleep(1)
+        print("What tyres would you like to start with(please enter softs, mediums or hards)? ")
+        styre = input()
+        sTyre = styre.lower()
+      if sTyre == "hards":
+        if hards() == True:
+          chart()
+      elif sTyre == "softs":
+        if softs() == True:
+          chart()
+      elif sTyre == "mediums":
+        if mediums() == True:
+          chart()
+    else:
+      while option != "yes" and option != "no":
+        print("Please pick an option provided")
+        time.sleep(1)
+        print("If you would like to go on hards, please say 'yes' or else say 'no'")
+        option = input()
+        if option == "yes":
+          if hards() == True:
+            chart()
+        elif option == "no":
+          print("What tyres would you like to start with(please enter softs, mediums or hards)")
+          styre = input()
+          sTyre = styre.lower()
+          while sTyre != "softs" and sTyre != "mediums" and sTyre != "hards":
+            print("Option not available, please only pick an option provided")
+            time.sleep(1)
+            print("What tyres would you like to start with(please enter softs, mediums or hards)? ")
+            styre = input()
+            sTyre = styre.lower()
+          if sTyre == "hards":
+            if hards() == True:
+              chart()   
+  elif styre == "softs":
+    if softs() == True:
+      chart()
+  elif sTyre == "mediums":
+    if mediums() == True:
+      chart()
+      
+
+  while True:
+    print("After", laps, "laps what tyre would you like to go on")
+    nTyre = input()
+    nTyre = nTyre.lower()
+    while nTyre != "softs" and nTyre != "mediums" and nTyre != "hards":
+      print("Option not available, please only pick an option provided")
+      time.sleep(1)
+      print("What tyres would you like to start with(please enter softs, mediums or hards)")
+      ntyre = input()
+      nTyre = ntyre.lower()
+    if nTyre == "softs":
+      if softs() == True:
+        chart()
+        
+    elif nTyre == "mediums":
+      if mediums() == True:
+        chart()
+        
+    else:
+      if hards() == True:
+        chart()
+        
+else:
+  cLap = wasNumEntered("What is the current lap? ", False)
+  if cLap >= totalLaps:
+    print("Race has already been finished")
+    time.sleep(1)
+    print("Ignore the error below")
+    exit()
+  laps += cLap
+  
+  cTyre = input("What is the current tyre being used? ")
+  cTyre = cTyre.lower()
+  
+  while cTyre != "softs" and cTyre != "mediums" and cTyre != "hards":
+    print("Option not available, please only pick an option provided")
+    time.sleep(1)
+    print("What tyres would you like to start with(please enter softs, mediums or hards)")
+    ctyre = input()
+    cTyre = ctyre.lower()
+
+  tyresUsed.append(cTyre.title())
+
+  tyreAge = wasNumEntered("How old are the tyres ", False)
+  
+  
+  if cTyre == "softs":
+    print("Soft are usable for a maximum of 20 laps")
+    time.sleep(1)
+    print("Lap 5 to 10 are the best laps times produced by this tyre")
+    time.sleep(1)
+    print("Fastest tyre compared to the rest for the first 17 laps")
+    time.sleep(1)
+    if tyreAge >= 20 and closeToEnd() == False:
+      print("Time to make a pit stop as tyre age too high and we are not close to the end")
+      tyreLaps.append(tyreAge)
+      time.sleep(1)
+      
+    elif tyreAge < 20:
+      print("There is still life left in the tyre, would you like to continue")
+      time.sleep(1)
+      option = input()
+      option = option.lower()
+      while option != "yes" and option != "no":
+        print("Invalid option picked")
+        time.sleep(1)
+        print("If you would like to continue on this tyre, say 'yes' or else say 'no'")
+        option = input()
+        option = option.lower()
+      if option == "yes":
+        print("Tyre has already been used for", tyreAge)
+        time.sleep(1)
+        lTyre = wasNumEntered("How many more laps would you like to stay on these tyres for? ", True)
+        
+        while lTyre > 20 - tyreAge:
+          lTyre = wasNumEntered("Too long stint chosen, please reduce the amount of laps", True)
+        laps += lTyre
+        tyreLaps.append(tyreAge + lTyre)
+      else:
+        tyreLaps.append(tyreAge)
+
+  elif cTyre == "mediums":
+    print("Mediums are not great to use after lap 32")
+    time.sleep(1)
+    print("Mediums give the best lap time between laps 7-18")
+    time.sleep(1)
+    print("Quickest tyre compared to other compounds from lap 24-30")
+    time.sleep(1)
+    if tyreAge >= 32 and closeToEnd() == False:
+      print("Time to make a pit stop as tyre age to high and we are not close to the end")
+      tyreLaps.append(tyreAge)
+      time.sleep(1)
+        
+    elif tyreAge < 32:
+      print("There is still life left in the tyre, would you like to continue")
+      time.sleep(1)
+      option = input()
+      option = option.lower()
+      while option != "yes" and option != "no":
+        print("Invalid option picked")
+        time.sleep(1)
+        print("If you would like to continue on this tyre, say 'yes' or else say 'no'")
+        option = input()
+        option = option.lower()
+      if option == "yes":
+        print("Tyre has already been used for", tyreAge)
+        time.sleep(1)
+        lTyre = wasNumEntered("How many more laps would you like to stay on these tyres for? ", True)
+        
+        while lTyre > 32 - tyreAge:
+          lTyre = wasNumEntered("Too long stint chosen, please reduce the amount of laps", True)
+        laps += lTyre
+        tyreLaps.append(tyreAge + lTyre)
+      else:
+        tyreLaps.append(tyreAge)
+
+  else:
+    print("Hards can be used till lap 40")
+    time.sleep(1)
+    print("Hards give the best lap time between laps 12-20")
+    time.sleep(1)
+    print("They are the quickest tyre compared to other compounds from lap 30-40")
+    time.sleep(1)
+    if tyreAge >= 40 and closeToEnd() == False:
+      print("Time to make a pit stop as tyre age to high and we are not close to the end")
+      tyreLaps.append(tyreAge)
+      time.sleep(1)
+    elif tyreAge < 40:
+      print("There is still life left in the tyre, would you like to continue")
+      time.sleep(1)
+      option = input()
+      option = option.lower()
+      while option != "yes" and option != "no":
+        print("Invalid option picked")
+        time.sleep(1)
+        print("If you would like to continue on this tyre, say 'yes' or else say 'no'")
+        option = input()
+        option = option.lower()
+      if option == "yes":
+        print("Tyre has already been used for", tyreAge)
+        time.sleep(1)
+        lTyre = wasNumEntered("How many more laps would you like to stay on these tyres for? ", True)
+        
+        while lTyre > 40 - tyreAge:
+          lTyre = wasNumEntered("Too long stint chosen, please reduce the amount of laps", True)
+        laps += lTyre
+        tyreLaps.append(tyreAge + lTyre)
+      else:
+        tyreLaps.append(tyreAge)
+  if closeToEnd() == True:
+    print("The race is almost over")
+    time.sleep(1)
+    print("Would you like to stick with these tyres and finish the race")
+    option = input()
+    option = option.lower()
+    while option != "yes" and option != "no":
+      print("Invalid option picked")
+      time.sleep(1)
+      print("If you would like to finish the race on this tyre, say 'yes' or else say 'no'")
+      option = input()
+      option = option.lower()
+    if option == "yes":
+      tyreLaps.append(tyreAge + (totalLaps - cLap))
+      print("Race has finished")
+      time.sleep(1)
+      print("Thank you for using F1 Strategy Maker")
+      chart()
+    else:
+      tyreLaps.append(tyreAge)
+        
+  while True:
+    print("After", laps, "laps what tyre would you like to go on")
+    nTyre = input()
+    nTyre = nTyre.lower()
+    while nTyre != "softs" and nTyre != "mediums" and nTyre != "hards":
+      print("Option not available, please only pick an option provided")
+      time.sleep(1)
+      print("What tyres would you like to start with(please enter softs, mediums or hards)")
+      ntyre = input()
+      nTyre = ntyre.lower()
+    if nTyre == "softs":
+      if softs() == True:
+        chart()
+        
+    elif nTyre == "mediums":
+      if mediums() == True:
+        chart()
+        
+    else:
+      if hards() == True:
+        chart()
